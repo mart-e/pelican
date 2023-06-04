@@ -346,6 +346,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
             md = [r(f) for f in silent_f2p(test_post, 'markdown', temp)][0]
             caption = re.search(r'\[caption', md)
             self.assertFalse(caption)
+            raise Exception(md)
             images = re.findall(r'\<img src="(.*?)"', md)
             self.assertEqual(images, [
                 '/theme/img/xpelican.png.pagespeed.ic.Rjep0025-y.png',

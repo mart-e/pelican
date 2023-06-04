@@ -832,7 +832,8 @@ def fields2pelican(
                     paragraphs = content.splitlines()
                     paragraphs = ['<p>{}</p>'.format(p) for p in paragraphs]
                     new_content = ''.join(paragraphs)
-
+                if "caption" in new_content or "figcaption" in new_content:
+                    logger.warning(new_content)
                 fp.write(new_content)
 
             if pandoc_version < (2,):
@@ -851,6 +852,7 @@ def fields2pelican(
                 cmd = cmd.format(from_arg,
                                  out_markup if out_markup != 'markdown' else "gfm",
                                  out_filename, html_filename)
+                logger.warning(cmd)
 
             try:
                 rc = subprocess.call(cmd, shell=True)
