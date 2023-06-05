@@ -823,6 +823,7 @@ def fields2pelican(
         if in_markup in ('html', 'wp-html'):
             html_filename = os.path.join(output_path, filename + '.html')
 
+            logger.error(in_markup + " " + html_filename)
             with open(html_filename, 'w', encoding='utf-8') as fp:
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
@@ -832,7 +833,8 @@ def fields2pelican(
                     paragraphs = content.splitlines()
                     paragraphs = ['<p>{}</p>'.format(p) for p in paragraphs]
                     new_content = ''.join(paragraphs)
-
+                logger.error("### Result after decode:")
+                logger.error(new_content)
                 fp.write(new_content)
 
             if pandoc_version < (2,):
@@ -851,6 +853,8 @@ def fields2pelican(
                 cmd = cmd.format(from_arg,
                                  out_markup if out_markup != 'markdown' else "gfm",
                                  out_filename, html_filename)
+            logger.error("### pandoc command:")
+            logger.error(cmd)
 
             try:
                 rc = subprocess.call(cmd, shell=True)
@@ -879,6 +883,8 @@ def fields2pelican(
                 content = update_links_to_attached_files(content, links)
 
         with open(out_filename, 'w', encoding='utf-8') as fs:
+            logger.error("### Result after pandoc:")
+            logger.error(header + content)
             fs.write(header + content)
 
     if posts_require_pandoc:
