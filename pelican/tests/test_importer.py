@@ -347,19 +347,18 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
         caption = re.search(r'\[caption', md)
         self.assertFalse(caption)
-        images = re.findall(r'\<img src="(.*?)"', md)
-        self.assertEqual(images, [
+
+        for occurence in [
             '/theme/img/xpelican.png.pagespeed.ic.Rjep0025-y.png',
             '/theme/img/xpelican-3.png.pagespeed.ic.m-NAIdRCOM.png',
-            '/theme/img/xpelican.png.pagespeed.ic.Rjep0025-y.png'
-        ])
-
-        figcaptions = re.findall(r'\<figcaption\>(.*?)\<\/figcaption\>', md)
-        self.assertEqual(figcaptions, [
+            '/theme/img/xpelican.png.pagespeed.ic.Rjep0025-y.png',
             'This is a pelican',
             'This also a pelican',
-            'Yet another pelican'
-        ])
+            'Yet another pelican',
+        ]:
+            # pandoc 2.x converts into ![text](src)
+            # pandoc 3.x converts into <figure>src<figcaption>text</figcaption></figure>
+            self.assertIn(occurence, md)
 
 
 class TestBuildHeader(unittest.TestCase):
